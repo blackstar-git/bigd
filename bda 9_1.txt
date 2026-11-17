@@ -1,0 +1,47 @@
+Experiment 9: Data Visualization (R)
+
+Goal: Build a data frame and do text-based visualization and basic statistics, with no graphics device needed.
+
+Steps:
+
+Create the data frame with Month, Sales, Profit and Customers for Jan to Jun, then print(data).
+Sales bar chart: loop over the rows and print the month, then paste(rep("*", Sales/10), collapse="") for the bar, then the value.
+Profit bar chart: the same, with Profit/5 asterisks.
+Customers bar chart: the same, with Customers/5 asterisks.
+Sales distribution: total_sales <- sum(data$Sales), then each month’s Sales/total*100, rounded to 2 decimals. The output is Jan 11.76%, Feb 14.71%, Mar 17.65%, Apr 13.73%, May 19.61%, Jun 22.55%.
+Summary statistics: print(summary(data)) gives the min, quartiles, median, mean and max of each numeric column (Sales mean 170, Profit mean 48.33, Customers mean 62.33).
+Correlation: cor(data$Sales, data$Customers) gives 0.9981827. This is very close to 1, a strong positive relationship.
+
+
+
+
+data <- data.frame(
+  Month = c("Jan","Feb","Mar","Apr","May","Jun"),
+  Sales = c(120,150,180,140,200,230),
+  Profit = c(30,40,50,35,60,75),
+  Customers = c(45,55,65,52,72,85)
+)
+print(data)
+
+cat("\nSALES VISUALIZATION\n")
+for(i in 1:nrow(data)) {
+  cat(data$Month[i], "|", paste(rep("*", data$Sales[i]/10), collapse=""), data$Sales[i], "\n")
+}
+cat("\nPROFIT VISUALIZATION\n")
+for(i in 1:nrow(data)) {
+  cat(data$Month[i], "|", paste(rep("*", data$Profit[i]/5), collapse=""), data$Profit[i], "\n")
+}
+cat("\nCUSTOMERS VISUALIZATION\n")
+for(i in 1:nrow(data)) {
+  cat(data$Month[i], "|", paste(rep("*", data$Customers[i]/5), collapse=""), data$Customers[i], "\n")
+}
+cat("\nSALES DISTRIBUTION\n")
+total_sales <- sum(data$Sales)
+for(i in 1:nrow(data)) {
+  percentage <- data$Sales[i] / total_sales * 100
+  cat(data$Month[i], ":", round(percentage, 2), "%\n")
+}
+cat("\nSUMMARY STATISTICS\n")
+print(summary(data))
+cat("\nCORRELATION BETWEEN SALES AND CUSTOMERS:\n")
+print(cor(data$Sales, data$Customers))

@@ -1,0 +1,51 @@
+Experiment 6: MongoDB CRUD
+
+Goal: Create, read, update and delete documents in MongoDB.
+
+1. Select the database
+
+use Testdb
+
+Output: “already on db Testdb”.
+
+2. Create (insert one document)
+
+db.Testdb.insertOne({ id:1, name:"ABC", phn:123, age:20, city:"Mumbai" })
+
+Returns acknowledged: true and an auto-generated insertedId (ObjectId).
+
+3. Create (insert many)
+
+db.Testdb.insertMany([
+  { id:2, name:"PQR", phn:789, age:30, city:"Goregaon" },
+  { id:3, name:"XYZ", phn:456, age:25, city:"Borivali" }
+])
+
+Returns the insertedIds of both documents.
+
+4. Read
+
+db.Testdb.find()
+
+Shows all 3 documents, each with its own _id.
+
+5. Update
+
+db.Testdb.updateOne({ id:2 }, { $set: { city:"Testupdate" } })
+db.Testdb.find()
+
+The result shows matchedCount: 1, modifiedCount: 1. Document id 2 now has city “Testupdate”. $set changes only the named field.
+
+6. Delete
+
+db.Testdb.deleteOne({ id:1 })
+db.Testdb.find()
+
+Returns deletedCount: 1. Only documents 2 and 3 remain.
+
+7. Check collections and create another
+
+show collections
+db.Testcollection.insertOne({ status: "setup complete" })
+
+show collections lists the existing collection. Inserting into a new collection name creates that collection automatically.

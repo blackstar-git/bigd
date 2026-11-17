@@ -1,0 +1,97 @@
+Experiment 1: HDFS Commands
+
+Goal: Work with files and directories in HDFS from the Cloudera terminal.
+
+1. Check the Hadoop version
+
+hadoop version
+
+Confirms Hadoop is installed (Hadoop 2.6.0-cdh5.13.0 here).
+
+2. List the HDFS root
+
+hdfs dfs -ls /
+hadoop fs -ls /
+
+Both give the same result. hdfs dfs works only on HDFS, while hadoop fs works on any supported file system. You get 7 items: /bd, /benchmarks, /hbase, /solr, /tmp, /user, /var.
+
+3. View HDFS in the GUI
+Open the browser, go to the Hadoop > NameNode “Browse Directory” page, and check that the same directories appear.
+
+4. Create a directory
+
+hdfs dfs -mkdir /exp1
+hdfs dfs -ls /
+
+The listing now shows 8 items, including /exp1.
+
+5. Copy a file from local to HDFS
+
+hdfs dfs -copyFromLocal /home/cloudera/Desktop/exp1 /exp1
+
+Copies the local file into HDFS and keeps the local copy. Check it in the GUI at /exp1 (135 B).
+
+6. Display file contents
+
+hdfs dfs -cat /exp1/exp1
+
+Prints the file’s text (hadoop, apache spark, namenode, datanode, and so on).
+
+7. Copy from HDFS to local
+
+hdfs dfs -copyToLocal /exp1/exp1 /home/cloudera
+ls /home/cloudera
+
+The file exp1 now appears in the local home directory.
+
+8. Move from local to HDFS
+
+hdfs dfs -moveFromLocal /home/cloudera/Desktop/test /exp1
+ls
+
+Copies the file to HDFS and deletes it locally. The GUI now shows test (21 B) in /exp1.
+
+9. Move from HDFS to local
+
+hdfs dfs -moveToLocal /exp1/test /home/cloudera
+
+Output: “Option ‘-moveToLocal’ is not implemented yet.” This command isn’t supported in this version.
+
+10. Set the replication factor
+
+hdfs dfs -setrep 3 /bd
+
+Output: “Replication 3 set: /bd/bd folder”. Each block is now stored on 3 nodes.
+
+11. Delete a file or folder
+
+hdfs dfs -rm /bd        - fails: "Is a directory"
+hdfs dfs -rmdir /bd     - fails: "Directory is not empty"
+hdfs dfs -rm -r /bd     - Deleted /bd
+
+-rm only works on files and -rmdir only on empty directories. -rm -r deletes a directory and everything in it.
+
+12. Copy inside HDFS
+
+hdfs dfs -cp /test/exp1 /copytest
+
+Check in the GUI that copytest (135 B) now exists.
+
+13. Move inside HDFS
+
+hdfs dfs -mv /copytest /copy1/
+
+Check in the GUI that /copy1 now contains copytest, and that /copytest is gone.
+
+14. Put (upload)
+
+hdfs dfs -put /home/cloudera/Desktop/exp1 /test
+
+Works like -copyFromLocal. Check that /test contains exp1.
+
+15. Get (download)
+
+hdfs dfs -get /test/exp1 /home/cloudera
+ls
+
+The file exp1 appears in the local directory listing.

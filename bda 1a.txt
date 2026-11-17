@@ -1,0 +1,34 @@
+HADOOP
+Expt 1
+On the Cloudera http://quickstart.cloudera:50070 go to Hadoop > Browse the Filesystem 
+Common HDFS Commands
+pwd or ls – to get local directory
+realpath file.txt – to get absolute path of a file
+hdfs dfs -ls /  – Lists files and directories in the specified HDFS location.
+Hadoop fs -ls / – same as previous.
+hdfs dfs -mkdir /data – Creates a new directory in HDFS named “data”.
+hdfs dfs -mkdir -p /data/input – Creates a directory along with any required parent directories.
+hdfs dfs -put file.txt /data – Uploads a local file to HDFS.
+hdfs dfs -copyFromLocal /home/…/file.txt /data – Copies a file from the local file system to HDFS.
+hdfs dfs -get /data/file.txt . – Copies a file from HDFS to the local file system.
+hdfs dfs -copyToLocal /data/file.txt . – Copies a file from HDFS to the local file system.
+hdfs dfs -cat /data/file.txt – Displays the contents of a file stored in HDFS.
+hdfs dfs -head /data/file.txt – Displays the beginning of a file.
+hdfs dfs -tail /data/file.txt – Displays the end of a file.
+hdfs dfs -cp /data/file.txt /backup/ – Copies a file or directory from one HDFS location to another.
+hdfs dfs -mv /data/file.txt /backup/ – Moves or renames a file or directory in HDFS.
+hdfs dfs -rm /data/file.txt – Deletes a file from HDFS.
+hdfs dfs -rm -r /data – Recursively deletes a directory and its contents.
+hdfs dfs -rmdir /data – Removes an empty directory from HDFS.
+hdfs dfs -du -h /data – Shows the disk space used by files and directories.
+hdfs dfs -df -h – Displays available and used space in the HDFS file system.
+hdfs dfs -count /data – Shows the number of directories, files, and total space used.
+hdfs dfs -chmod 755 /data – Changes permissions of an HDFS file or directory.
+hdfs dfs -chown user:group /data – Changes the owner and group of a file or directory.
+hdfs dfs -chgrp group /data – Changes the group ownership of a file or directory.
+hdfs dfs -touchz /data/file.txt – Creates an empty file in HDFS.
+hdfs dfs -test -e /data/file.txt – Checks whether a file or directory exists.
+hdfs dfs -find /data -name "*.txt" – Searches for files matching a specified pattern.
+hdfs dfs -setrep -w 3 /data/file.txt – Sets the replication factor of a file to 3.
+hdfs dfs -stat /data/file.txt – Displays information about a file or directory.
+hdfs dfs -help – Displays help information about available HDFS commands.

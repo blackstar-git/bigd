@@ -1,0 +1,74 @@
+Experiment 8: Social Network Analysis (R)
+
+Goal: Build a graph, compute degree centrality, and find communities with no packages.
+
+Steps:
+
+Create nodes: nodes <- LETTERS[1:8] gives A to H.
+Create edges: a matrix of 11 pairs (1-2, 1-3, 2-3, 2-4, 3-4, 4-5, 5-6, 5-7, 6-7, 6-8, 7-8), with ncol=2, byrow=TRUE.
+Build the adjacency matrix: adj <- matrix(0, n, n). Loop over the edges and set adj[a,b] <- 1 and adj[b,a] <- 1, because the graph is undirected.
+Print basic info: the number of nodes (8) and edges (11).
+Print connections: for each node, which(adj[i,] == 1) finds its neighbours. For example, A: B, C and D: B, C, E.
+Degree centrality: degree <- rowSums(adj). A and H have degree 2, and B to G have degree 3.
+Community detection (BFS traversal):
+Create visited (all FALSE) and community (all 0).
+For each unvisited node, start a new community and put the node in a queue.
+Pop a node, assign it the community ID, and add its unvisited neighbours to the queue.
+Repeat until the queue is empty, then move to the next unvisited node.
+Print the communities and each node’s membership.
+
+
+
+nodes <- LETTERS[1:8]
+edges <- matrix(c(1,2, 1,3, 2,3, 2,4, 3,4, 4,5, 5,6, 5,7, 6,7, 6,8, 7,8), ncol=2, byrow=TRUE)
+n <- length(nodes)
+adj <- matrix(0, n, n)
+for(i in 1:nrow(edges)) {
+  a <- edges[i,1]; b <- edges[i,2]
+  adj[a,b] <- 1; adj[b,a] <- 1
+}
+cat("SOCIAL NETWORK ANALYSIS\n")
+cat("Number of Nodes:", n, "\n")
+cat("Number of Edges:", nrow(edges), "\n\n")
+cat("Connections:\n")
+for(i in 1:n) {
+  connected <- which(adj[i,] == 1)
+  cat(nodes[i], ":", paste(nodes[connected], collapse=", "), "\n")
+}
+degree <- rowSums(adj)
+cat("\nDegree Centrality:\n")
+for(i in 1:n) cat(nodes[i], ":", degree[i], "\n")
+
+visited <- rep(FALSE, n)
+community <- rep(0, n)
+community_id <- 0
+for(i in 1:n) {
+  if(!visited[i]) {
+    community_id <- community_id + 1
+    queue <- c(i)
+    visited[i] <- TRUE
+    while(length(queue) > 0) {
+      current <- queue[1]
+      queue <- queue[-1]
+      community[current] <- community_id
+      neighbours <- which(adj[current,] == 1)
+      for(j in neighbours) {
+        if(!visited[j]) {
+          visited[j] <- TRUE
+          queue <- c(queue, j)
+        }
+      }
+    }
+  }
+}
+cat("\nDetected Communities:\n")
+for(i in 1:community_id) {
+  members <- nodes[community == i]
+  cat("Community", i, ":", paste(members, collapse=", "), "\n")
+}
+cat("\nCommunity Membership:\n")
+for(i in 1:n) cat(nodes[i], "-> Community", community[i], "\n")
+
+
+
+Output: 8 nodes, 11 edges, and one community containing A, B, C, D, E, F, G, H. The network is fully connected, so BFS reaches every node from A.

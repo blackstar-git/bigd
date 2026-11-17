@@ -1,0 +1,371 @@
+R Programming – Practical Exam Cheat Sheet
+Only commonly used R syntax, functions and commands required for basic RStudio practicals.
+1. Basic R Commands
+Syntax / Function
+Purpose
+getwd()
+Displays current working directory.
+setwd("path")
+Changes working directory.
+print(x)
+Displays output.
+cat()
+Prints formatted output.
+#
+Adds comments.
+ls()
+Lists objects in the workspace.
+rm(x)
+Deletes an object.
+help(mean) or ?mean
+Displays function documentation.
+example(mean)
+Shows examples of a function.
+source("file.R")
+Executes an R script.
+install.packages("ggplot2")
+Installs an R package.
+library(ggplot2)
+Loads an installed package.
+
+2. Variables and Data Types
+Syntax / Function
+Purpose
+x <- 10
+Creates and assigns a variable.
+class(x)
+Displays the object's data class.
+typeof(x)
+Displays the object's underlying data type.
+as.numeric(x)
+Converts into numeric format.
+as.character(x)
+Converts into character format.
+as.integer(x)
+Converts into integer format.
+as.logical(x)
+Converts into logical format.
+is.na(x)
+Checks for missing values.
+
+3. Working with Vectors
+Syntax / Function
+Purpose
+c(10,20,30)
+Creates a vector.
+1:10
+Generates a sequence from 1 to 10.
+seq(1,10,by=2)
+Generates a sequence with a specified interval.
+rep(5,4)
+Repeats a value four times.
+length(x)
+Returns the number of elements.
+x[1]
+Accesses the first element.
+sort(x)
+Sorts vector elements.
+rev(x)
+Reverses vector elements.
+unique(x)
+Returns distinct elements.
+sum(x)
+Calculates sum.
+mean(x)
+Calculates average.
+max(x)
+Returns maximum value.
+min(x)
+Returns minimum value.
+median(x)
+Calculates median.
+sd(x)
+Calculates standard deviation.
+var(x)
+Calculates variance.
+summary(x)
+Displays statistical summary.
+
+4. Creating and Using Objects
+Syntax / Function
+Purpose
+matrix()
+Creates a matrix.
+array()
+Creates a multidimensional array.
+list()
+Creates a list of objects.
+data.frame()
+Creates a tabular dataset.
+factor()
+Creates categorical data.
+dim(x)
+Displays object dimensions.
+str(x)
+Displays object structure.
+class(x)
+Displays object class.
+names(x)
+Displays or assigns object names.
+
+5. User Interaction
+Syntax / Function
+Purpose
+readline()
+Accepts character input from the user.
+scan()
+Accepts multiple input values.
+as.numeric(readline())
+Accepts numerical input.
+print()
+Displays output.
+cat()
+Displays formatted output.
+paste()
+Combines strings.
+
+6. Workspace and File Handling
+Syntax / Function
+Purpose
+ls()
+Lists workspace objects.
+rm(x)
+Removes an object.
+rm(list=ls())
+Clears the workspace.
+save(x,file="data.RData")
+Saves an object.
+load("data.RData")
+Loads saved objects.
+getwd()
+Displays working directory.
+setwd("path")
+Changes working directory.
+source("program.R")
+Executes an R script.
+
+7. Reading and Exporting Datasets
+Syntax / Function
+Purpose
+read.csv("data.csv")
+Reads a CSV dataset.
+read.table("data.txt")
+Reads a text dataset.
+write.csv(data,"output.csv")
+Exports data into CSV format.
+write.table(data,"output.txt")
+Exports data into text format.
+data()
+Displays available built-in datasets.
+View(data)
+Opens a dataset in RStudio.
+
+8. Data Manipulation and Processing
+Syntax / Function
+Purpose
+head(data)
+Displays first six rows.
+tail(data)
+Displays last six rows.
+summary(data)
+Displays statistical summary.
+str(data)
+Displays dataset structure.
+dim(data)
+Displays rows and columns.
+nrow(data)
+Returns number of rows.
+ncol(data)
+Returns number of columns.
+names(data)
+Displays column names.
+data$column
+Accesses a particular column.
+data[1,]
+Selects the first row.
+data[,1]
+Selects the first column.
+subset(data,marks>50)
+Filters rows based on a condition.
+sort(data$marks)
+Sorts column values.
+order(data$marks)
+Returns sorting positions.
+unique(data)
+Removes duplicate records.
+na.omit(data)
+Removes rows containing missing values.
+merge(data1,data2,by="id")
+Combines datasets using a common column.
+rbind(data1,data2)
+Combines datasets row-wise.
+cbind(data1,data2)
+Combines datasets column-wise.
+table(data$gender)
+Creates a frequency distribution.
+aggregate(marks~class,data,mean)
+Calculates grouped averages.
+
+9. Functions in R
+Syntax / Function
+Purpose
+function()
+Defines a user-defined function.
+return()
+Returns a value from a function.
+apply()
+Applies a function to matrix rows or columns.
+lapply()
+Applies a function to each list element.
+sapply()
+Applies a function and simplifies the result.
+tapply()
+Applies a function to groups of data.
+ifelse()
+Performs conditional selection.
+
+Example of a user-defined function:
+calculate <- function(a,b) {
+  sum <- a+b
+  return(sum)
+}
+
+calculate(10,20)
+10. Data Visualization
+A. Basic Visualization Functions
+Function
+Purpose
+plot(x,y)
+Creates a scatter plot.
+hist(x)
+Creates a histogram.
+barplot(x)
+Creates a bar chart.
+pie(x)
+Creates a pie chart.
+boxplot(x)
+Creates a box plot.
+lines(x,y)
+Adds lines to an existing plot.
+points(x,y)
+Adds points to an existing plot.
+legend()
+Adds a legend to a graph.
+title()
+Adds a graph title.
+
+B. Common Graph Parameters
+Parameter
+Purpose
+main
+Specifies graph title.
+xlab
+Specifies X-axis label.
+ylab
+Specifies Y-axis label.
+col
+Specifies graph colour.
+pch
+Specifies point symbol.
+xlim
+Specifies X-axis range.
+ylim
+Specifies Y-axis range.
+
+C. ggplot2 Functions
+Function
+Purpose
+ggplot()
+Initializes a graph.
+aes()
+Specifies variables for plotting.
+geom_point()
+Creates a scatter plot.
+geom_line()
+Creates a line graph.
+geom_bar()
+Creates a bar chart.
+geom_histogram()
+Creates a histogram.
+geom_boxplot()
+Creates a box plot.
+geom_density()
+Creates a density plot.
+labs()
+Adds graph titles and axis labels.
+theme_minimal()
+Applies a minimal graph theme.
+ggsave()
+Saves a graph to a file.
+
+11. Types and Applications of Data Visualization
+Visualization
+Application
+Bar Chart
+Comparing different categories.
+Histogram
+Displaying frequency distribution.
+Pie Chart
+Showing proportions and percentages.
+Line Graph
+Showing trends over time.
+Scatter Plot
+Identifying relationships between variables.
+Box Plot
+Displaying median, quartiles and outliers.
+Density Plot
+Showing data distribution.
+
+12. Important Practical Programs
+These are useful basic implementations to practise before the examination.
+1. Basic calculations
+a <- 10
+b <- 20
+sum <- a+b
+print(sum)
+2. Vector operations
+x <- c(10,20,30,40,50)
+mean(x)
+sum(x)
+max(x)
+min(x)
+3. Creating a data frame
+name <- c("A","B","C")
+marks <- c(80,90,75)
+
+data <- data.frame(name,marks)
+print(data)
+summary(data)
+4. Reading a CSV
+data <- read.csv("data.csv")
+head(data)
+summary(data)
+5. Filtering data
+subset(data, marks>80)
+6. Bar plot
+barplot(data$marks,
+        main="Student Marks",
+        xlab="Students",
+        ylab="Marks",
+        col="blue")
+7. Histogram
+hist(data$marks,
+     main="Marks Distribution",
+     xlab="Marks",
+     col="green")
+8. Pie chart
+pie(data$marks,
+    main="Marks Distribution",
+    col=rainbow(length(data$marks)))
+9. Scatter plot
+plot(data$marks,
+     main="Marks Scatter Plot",
+     xlab="Students",
+     ylab="Marks",
+     col="red")
+10. Box plot
+boxplot(data$marks,
+        main="Marks Box Plot",
+        ylab="Marks",
+        col="orange")
+Exam priority: Focus on Sections 3, 4, 7, 8, 9 and 10, along with the practical programs. These cover the core implementation skills without unnecessary advanced R functions.

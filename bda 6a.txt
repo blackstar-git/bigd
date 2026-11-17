@@ -1,0 +1,26 @@
+Expt 6
+MongoDB 
+MongoDB Compass includes a built-in command-line interface at the bottom of the application window. 
+Open the shell. Connect to your database in Compass, then click the >_MONGOSH bar located at the very bottom of the screen to expand the terminal pane.
+Enable the shell if missing. If you do not see the _MONGOSH bar, open Compass Settings (via the top menu or gear icon) and make sure Enable MongoDB Shell is turned on.
+If you want to open the Compass application itself from your OS terminal or command prompt (for example, to pass a connection string or configuration file), use the Compass executable. Windows: Navigate to your installation folder in Command Prompt or PowerShell and run MongoDBCompass.exe.
+
+Commands Used
+use <database_name> – Selects the specified database or creates it when data is first inserted.
+db.createCollection("<collection_name>") – Creates a new collection.
+db.<collection>.insertOne({...}) – Inserts a single document into a collection.
+db.<collection>.insertMany([...]) – Inserts multiple documents into a collection.
+db.<collection>.find() – Retrieves all documents from a collection.
+db.<collection>.find({<condition>}) – Retrieves documents matching a specified condition.
+db.<collection>.findOne({<condition>}) – Retrieves the first document matching a specified condition.
+db.<collection>.updateOne({<condition>}, {$set: {...}}) – Updates fields in the first matching document.
+db.<collection>.updateMany({<condition>}, {$set: {...}}) – Updates fields in all matching documents.
+db.<collection>.updateMany({<condition>}, {$inc: {...}}) – Increments the value of one or more numeric fields.
+db.<collection>.replaceOne({<condition>}, {...}) – Replaces an entire document with a new one.
+db.<collection>.deleteOne({<condition>}) – Deletes the first document matching a specified condition.
+db.<collection>.deleteMany({<condition>}) – Deletes all documents matching a specified condition.
+db.<collection>.find().sort({<field>: 1}) – Sorts documents in ascending order.
+db.<collection>.find().sort({<field>: -1}) – Sorts documents in descending order.
+db.<collection>.find().limit(<number>) – Limits the number of documents returned.
+db.<collection>.find({}, {<field>: 1, _id: 0}) – Projects only the specified fields while excluding _id.
+db.<collection>.countDocuments() – Returns the total number of documents in the collection.

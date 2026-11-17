@@ -1,0 +1,203 @@
+BIG DATA ANALYTICS PRACTICAL
+EXPERIMENT 2
+
+Aim:
+To use Sqoop to transfer data between Hadoop and a relational database server.
+
+Environment:
+Cloudera QuickStart VM
+MySQL database: retail_db
+MySQL username: root
+MySQL password: cloudera
+
+IMPORTANT NOTES
+- Run MySQL commands at the mysql> prompt.
+- Run Sqoop and Hadoop commands in the Linux terminal: [cloudera@quickstart ~]$.
+- The practical manual creates a table named `dept` but its export command mentions `--table departments`. Since the newly created destination table is `dept`, the successful export command below uses `--table dept`.
+- If a Sqoop import fails because the target HDFS directory already exists, remove that directory first and retry.
+
+------------------------------------------------------------
+1. OPEN MYSQL AND CHECK THE DATABASE
+------------------------------------------------------------
+
+Linux terminal:
+mysql -u root -pcloudera
+
+MySQL:
+show databases;
+use retail_db;
+show tables;
+select * from departments;
+
+Expected departments data:
+2,Fitness
+3,Footwear
+4,Apparel
+5,Golf
+6,Outdoors
+7,Fan Shop
+
+------------------------------------------------------------
+2. SQOOP: LIST DATABASES
+------------------------------------------------------------
+
+Linux terminal:
+sqoop list-databases --connect jdbc:mysql://quickstart:3306/ --username root --password cloudera
+
+Expected:
+A list of MySQL databases is displayed, including retail_db.
+
+------------------------------------------------------------
+3. SQOOP: LIST TABLES
+------------------------------------------------------------
+
+Linux terminal:
+sqoop list-tables --connect jdbc:mysql://quickstart:3306/retail_db --username root --password cloudera
+
+Expected:
+categories
+customers
+departments
+order_items
+orders
+products
+
+------------------------------------------------------------
+4. IMPORT THE DEPARTMENTS TABLE INTO HDFS
+------------------------------------------------------------
+
+Linux terminal:
+sqoop import --connect jdbc:mysql://quickstart:3306/retail_db --username root --password cloudera --table departments
+
+Expected:
+Import completes successfully and transfers 6 records.
+
+Check HDFS:
+hadoop fs -ls
+hadoop fs -ls departments
+hadoop fs -cat /user/cloudera/departments/part*
+
+Expected data (record order may vary):
+2,Fitness
+3,Footwear
+4,Apparel
+5,Golf
+6,Outdoors
+7,Fan Shop
+
+------------------------------------------------------------
+5. IMPORT INTO A SPECIFIC HDFS DIRECTORY
+------------------------------------------------------------
+
+sqoop import --connect jdbc:mysql://quickstart:3306/retail_db --username root --password cloudera --table departments --target-dir /user/cloudera/department1
+
+Check:
+hadoop fs -ls
+hadoop fs -ls department1
+
+Expected:
+Import completes successfully; the directory contains _SUCCESS and part-m-* files. Six records are imported.
+
+------------------------------------------------------------
+6. IMPORT USING A WHERE CONDITION
+------------------------------------------------------------
+
+sqoop import --connect jdbc:mysql://quickstart:3306/retail_db --password cloudera --username root --table departments --where "department_id>4" --target-dir /user/cloudera/department2
+
+If the target directory already exists, remove it and retry:
+hadoop fs -rm -r /user/cloudera/department2
+
+Display the imported data:
+hadoop fs -cat /user/cloudera/department2/part*
+
+Expected output:
+5,Golf
+6,Outdoors
+7,Fan Shop
+
+Three records are imported because department_id is greater than 4.
+
+------------------------------------------------------------
+7. CREATE THE DESTINATION TABLE IN MYSQL
+------------------------------------------------------------
+
+Linux terminal:
+mysql -u root -pcloudera
+
+MySQL:
+use retail_db;
+
+CREATE TABLE dept (
+    department_id INT NOT NULL AUTO_INCREMENT,
+    department_name VARCHAR(50) NOT NULL,
+    PRIMARY KEY(department_id)
+);
+
+Check:
+select * from dept;
+
+Expected:
+The table is initially empty.
+
+------------------------------------------------------------
+8. EXPORT DATA FROM HDFS TO MYSQL
+------------------------------------------------------------
+
+Linux terminal:
+sqoop export --connect jdbc:mysql://quickstart:3306/retail_db --username root --password cloudera --table dept --export-dir /user/cloudera/department2
+
+Expected:
+Export job completes successfully. Three records are exported.
+
+Manual clarification:
+The manual's export command mentions --table departments, but the table created in Step 7 is named dept. Use --table dept to export into the newly created table. This is the command that succeeded in the practical.
+
+------------------------------------------------------------
+9. VERIFY THE EXPORTED DATA IN MYSQL
+------------------------------------------------------------
+
+Linux terminal:
+mysql -u root -pcloudera
+
+MySQL:
+use retail_db;
+select * from dept;
+
+Expected output:
+department_id | department_name
+5             | Golf
+6             | Outdoors
+7             | Fan Shop
+
+3 rows in set.
+
+------------------------------------------------------------
+10. IMPORTANT COMMANDS FOR QUICK REVISION
+------------------------------------------------------------
+
+List HDFS files:
+hadoop fs -ls
+
+Display HDFS file contents:
+hadoop fs -cat /path/to/file
+
+Remove an HDFS directory:
+hadoop fs -rm -r /path/to/directory
+
+Sqoop list databases:
+sqoop list-databases --connect jdbc:mysql://quickstart:3306/ --username root --password cloudera
+
+Sqoop list tables:
+sqoop list-tables --connect jdbc:mysql://quickstart:3306/retail_db --username root --password cloudera
+
+Sqoop import:
+sqoop import --connect jdbc:mysql://quickstart:3306/retail_db --username root --password cloudera --table departments
+
+Sqoop import with target directory:
+sqoop import --connect jdbc:mysql://quickstart:3306/retail_db --username root --password cloudera --table departments --target-dir /user/cloudera/department1
+
+Sqoop import with condition:
+sqoop import --connect jdbc:mysql://quickstart:3306/retail_db --password cloudera --username root --table departments --where "department_id>4" --target-dir /user/cloudera/department2
+
+Sqoop export:
+sqoop export --connect jdbc:mysql://quickstart:3306/retail_db --username root --password cloudera --table dept --export-dir /user/cloudera/department2

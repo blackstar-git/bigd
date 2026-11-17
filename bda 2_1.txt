@@ -1,0 +1,90 @@
+Experiment 2: Sqoop (MySQL - HDFS)
+
+Goal: Import MySQL data into HDFS and export it back.
+
+1. Log in to MySQL
+
+mysql -u root -pcloudera
+
+2. Explore the database
+
+show databases;
+use retail_db;
+show tables;
+
+There are 12 databases. retail_db has 6 tables: categories, customers, departments, order_items, orders, products.
+
+3. Connect Sqoop to MySQL
+
+sqoop list-databases --connect jdbc:mysql://quickstart:3306/ --username root --password cloudera
+
+Sqoop connects through JDBC and lists the same databases, which confirms the connection works. Warnings about Accumulo and about passing the password on the command line are harmless.
+
+4. Connect Sqoop to retail_db
+
+sqoop list-databases --connect jdbc:mysql://quickstart:3306/retail_db --username root --password cloudera
+
+5. View the departments table (in MySQL)
+
+select * from departments;
+
+There are 6 rows: Fitness, Footwear, Apparel, Golf, Outdoors, Fan Shop (IDs 2–7).
+
+6. Import the table into HDFS
+
+sqoop import --connect jdbc:mysql://quickstart:3306/retail_db --username root --password cloudera --table departments
+
+Sqoop launches a MapReduce job with 4 map tasks. The log ends with “Retrieved 6 records”. The data goes to /user/cloudera/departments by default.
+
+7. Check HDFS
+
+hadoop fs -ls
+hadoop fs -ls departments
+
+You see _SUCCESS (job succeeded) and part-m-00000 to part-m-00003. There are 4 files because there were 4 parallel mappers.
+
+8. View the part files
+
+hadoop fs -cat /user/cloudera/departments/part-m-00000    - 2,3
+hadoop fs -cat /user/cloudera/departments/part-m-00001    - 4
+hadoop fs -cat /user/cloudera/departments/part-m-00002    - 5
+hadoop fs -cat /user/cloudera/departments/part-m-00003    - 6,7
+hadoop fs -cat /user/cloudera/departments/part*           - all 6 rows
+
+9. Import to a custom folder
+
+sqoop import --connect jdbc:mysql://quickstart:3306/retail_db --username root --password cloudera --table departments --target-dir /user/cloudera/department1
+
+Then check:
+
+hadoop fs -ls
+hadoop fs -ls department1
+hadoop fs -cat /user/cloudera/department1/part*
+
+It has the same 4 part files and 6 records.
+
+10. Import with a WHERE condition
+
+sqoop import --connect jdbc:mysql://quickstart:3306/retail_db --username root --password cloudera --table departments --where "department_id>4" --target-dir /user/cloudera/department2
+hadoop fs -cat /user/cloudera/department2/part*
+
+Only 3 records are retrieved: Golf, Outdoors, Fan Shop.
+
+11. Create an empty target table in MySQL
+
+create table dept(department_id int not null auto_increment, department_name varchar(50) not null, primary key(department_id));
+select * from dept;
+
+The result is an empty set. Export needs the target table to exist already.
+
+12. Export from HDFS to MySQL
+
+sqoop export --connect jdbc:mysql://quickstart:3306/retail_db --username root --password cloudera --table dept --export-dir /user/cloudera/department2
+
+The log ends with “Exported 3 records”.
+
+13. Verify in MySQL
+
+select * from dept;
+
+It shows 3 rows: Golf, Outdoors, Fan Shop.

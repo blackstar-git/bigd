@@ -1,0 +1,222 @@
+BIG DATA ANALYTICS PRACTICAL
+EXPERIMENT 3
+
+AIM:
+To create Hive database and perform statistical functions.
+
+THEORY:
+Apache Hive is a data warehouse infrastructure built on top of Hadoop. It is used to store, manage, and analyze large datasets. Hive provides an SQL-like language called HiveQL (Hive Query Language), allowing users to query data without writing complex MapReduce programs.
+
+In this experiment, a Hive database is created to store student-related information such as student ID, name, age, and marks. A table is created inside the database and sample records are inserted. The data is retrieved and analyzed using HiveQL queries.
+
+Descriptive analytics summarizes and helps understand existing data. Hive provides built-in statistical functions:
+- COUNT() – counts the number of records.
+- SUM() – calculates the total.
+- AVG() – calculates the average.
+- MIN() – finds the minimum value.
+- MAX() – finds the maximum value.
+- STDDEV() – calculates standard deviation.
+- VARIANCE() – calculates variance.
+- GROUP BY – groups records for category-wise analysis.
+- ORDER BY – sorts query results.
+
+ENVIRONMENT:
+- Cloudera QuickStart VM
+- Apache Hive
+- Database: analytics_db
+- Table: student_marks
+
+IMPORTANT:
+Run Hive commands after entering the Hive shell. The prompt should be:
+hive>
+
+To start Hive, use the Linux terminal:
+hive
+
+------------------------------------------------------------
+1. CREATE AND CHECK THE DATABASE
+------------------------------------------------------------
+
+At the hive> prompt:
+
+CREATE DATABASE analytics_db;
+
+Expected:
+OK
+
+Show databases:
+SHOW DATABASES;
+
+Expected:
+analytics_db
+default
+
+Select the database:
+USE analytics_db;
+
+Expected:
+OK
+
+------------------------------------------------------------
+2. CREATE AND SHOW THE TABLE
+------------------------------------------------------------
+
+CREATE TABLE student_marks
+(
+    student_id INT,
+    student_name STRING,
+    age INT,
+    marks INT
+);
+
+Expected:
+OK
+
+Show tables:
+SHOW TABLES;
+
+Expected:
+student_marks
+
+------------------------------------------------------------
+3. INSERT AND DISPLAY STUDENT RECORDS
+------------------------------------------------------------
+
+Insert sample records:
+
+INSERT INTO TABLE student_marks VALUES
+(1, 'Amit', 20, 75),
+(2, 'Rahul', 21, 88),
+(3, 'Priya', 20, 61),
+(4, 'Karan', 20, 92),
+(5, 'Neha', 20, 68);
+
+Expected:
+Query completes successfully. Hive reports 5 rows in the table statistics.
+
+Display all records:
+
+SELECT * FROM student_marks;
+
+Expected output:
+
+student_id    student_name    age    marks
+1             Amit            20     75
+2             Rahul           21     88
+3             Priya           20     61
+4             Karan           20     92
+5             Neha            20     68
+
+------------------------------------------------------------
+4. DESCRIPTIVE STATISTICAL ANALYSIS
+------------------------------------------------------------
+
+1) COUNT – Total number of students
+
+SELECT COUNT(*) FROM student_marks;
+
+Expected result:
+5
+
+2) SUM – Total marks
+
+SELECT SUM(marks) FROM student_marks;
+
+Expected result:
+384
+
+3) AVG – Average marks
+
+SELECT AVG(marks) FROM student_marks;
+
+Expected result:
+76.8
+
+4) MIN – Minimum marks
+
+SELECT MIN(marks) FROM student_marks;
+
+Expected result:
+61
+
+5) MAX – Maximum marks
+
+SELECT MAX(marks) FROM student_marks;
+
+Expected result:
+92
+
+6) STDDEV – Standard deviation
+
+SELECT STDDEV(marks) FROM student_marks;
+
+Expected:
+Returns the standard deviation of the marks.
+
+7) VARIANCE – Variance
+
+SELECT VARIANCE(marks) FROM student_marks;
+
+Expected:
+Returns the variance of the marks.
+
+8) GROUP BY – Average marks according to age
+
+SELECT age, AVG(marks)
+FROM student_marks
+GROUP BY age;
+
+Expected result:
+age 20 -> average marks 74
+age 21 -> average marks 88
+
+9) ORDER BY – Sort students by marks in descending order
+
+SELECT * FROM student_marks
+ORDER BY marks DESC;
+
+Expected order:
+Karan  - 92
+Rahul  - 88
+Amit   - 75
+Neha   - 68
+Priya  - 61
+
+------------------------------------------------------------
+5. IMPORTANT HIVEQL COMMANDS FOR QUICK REVISION
+------------------------------------------------------------
+
+Start Hive from Linux:
+hive
+
+Create database:
+CREATE DATABASE analytics_db;
+
+Show databases:
+SHOW DATABASES;
+
+Select database:
+USE analytics_db;
+
+Create table:
+CREATE TABLE student_marks
+(
+    student_id INT,
+    student_name STRING,
+    age INT,
+    marks INT
+);
+
+Show tables:
+SHOW TABLES;
+
+Insert records:
+INSERT INTO TABLE student_marks VALUES
+(1, 'Amit', 20, 75),
+(2, 'Rahul', 21, 88),
+(3, 'Priya', 20, 61),
+(4, 'Karan', 20, 92),
+(5, 'Neha', 20, 68);
+
+Display records:
+SELECT * FROM student_marks;

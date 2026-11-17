@@ -1,0 +1,260 @@
+BIG DATA ANALYTICS PRACTICAL
+EXPERIMENT NO. 06
+
+AIM:
+To perform CRUD operations and query processing using MongoDB.
+
+THEORY:
+NoSQL (Not Only SQL) databases are non-relational databases designed to store and manage large volumes of structured, semi-structured, and unstructured data. They do not require a fixed schema and are useful for applications requiring flexibility, high performance, and horizontal scaling.
+
+MongoDB is a document-oriented NoSQL database. It stores data in BSON (Binary JSON) documents. Data is organized into databases, collections, and documents. Collections are similar to tables in relational databases, while documents are similar to rows.
+
+CRUD stands for:
+- Create: Insert documents into a collection.
+- Read: Retrieve documents from a collection.
+- Update: Modify existing documents.
+- Delete: Remove documents from a collection.
+
+------------------------------------------------------------
+1. USING DATABASE AND CREATING COLLECTIONS
+------------------------------------------------------------
+
+Open MongoDB Shell (mongosh).
+
+Select or create the database:
+use ERP
+
+Create the collections:
+db.createCollection("students")
+db.createCollection("faculty")
+
+------------------------------------------------------------
+2. INSERT DOCUMENTS
+------------------------------------------------------------
+
+Insert multiple student documents:
+
+db.students.insertMany([
+  {
+    name: "Aarav Mehta",
+    roll_no: 101,
+    year: 2,
+    dept: "Computer Engineering",
+    DOB: ISODate("2005-02-14")
+  },
+  {
+    name: "Isha Kulkarni",
+    roll_no: 102,
+    year: 3,
+    dept: "Information Technology",
+    DOB: ISODate("2004-07-09")
+  },
+  {
+    name: "Rohan Shah",
+    roll_no: 103,
+    year: 1,
+    dept: "Electronics",
+    DOB: ISODate("2006-01-22")
+  },
+  {
+    name: "Meera Joshi",
+    roll_no: 104,
+    year: 4,
+    dept: "Computer Engineering",
+    DOB: ISODate("2003-11-30")
+  },
+  {
+    name: "Kabir Desai",
+    year: 8,
+    dept: "Electronics",
+    DOB: ISODate("1988-12-05"),
+    salary: 85000
+  }
+])
+
+Insert faculty documents:
+
+db.faculty.insertMany([
+  {
+    name: "Nikhil Patil",
+    year: 10,
+    dept: "Computer Engineering",
+    DOB: ISODate("1985-03-15"),
+    salary: 90000
+  },
+  {
+    name: "Sana Khan",
+    year: 6,
+    dept: "Information Technology",
+    DOB: ISODate("1990-08-20"),
+    salary: 75000
+  }
+])
+
+------------------------------------------------------------
+3. FIND – DISPLAY DOCUMENTS
+------------------------------------------------------------
+
+Display all student documents:
+db.students.find()
+
+Find students from Computer Engineering:
+db.students.find({ dept: "Computer Engineering" })
+
+Expected:
+Aarav Mehta and Meera Joshi match this condition.
+
+------------------------------------------------------------
+4. FINDONE – DISPLAY ONE MATCHING DOCUMENT
+------------------------------------------------------------
+
+Find the student with roll number 102:
+db.students.findOne({ roll_no: 102 })
+
+Expected:
+The document for Isha Kulkarni is returned.
+
+Find a student by name:
+db.students.findOne({ name: "Zoya Malhotra" })
+
+Expected:
+null, if no matching document exists.
+
+------------------------------------------------------------
+5. UPDATE – MODIFY DOCUMENTS
+------------------------------------------------------------
+
+Update the year of the student with roll number 101:
+db.students.updateOne(
+  { roll_no: 101 },
+  { $set: { year: 3 } }
+)
+
+Update the department for all students currently in Computer Engineering:
+db.students.updateMany(
+  { dept: "Computer Engineering" },
+  { $set: { dept: "CSE" } }
+)
+
+------------------------------------------------------------
+6. REPLACE – REPLACE AN ENTIRE DOCUMENT
+------------------------------------------------------------
+
+Replace the document with roll number 103:
+
+db.students.replaceOne(
+  { roll_no: 103 },
+  {
+    name: "Rohan Shah",
+    roll_no: 103,
+    year: 2,
+    dept: "Electronics and Telecommunication",
+    DOB: ISODate("2006-01-22")
+  }
+)
+
+------------------------------------------------------------
+7. DELETE – REMOVE DOCUMENTS
+------------------------------------------------------------
+
+Delete the student with roll number 104:
+db.students.deleteOne({ roll_no: 104 })
+
+Delete faculty documents belonging to Electronics:
+db.faculty.deleteMany({ dept: "Electronics" })
+
+Note:
+The inserted faculty sample records do not include an Electronics department, so this command may return deletedCount: 0 unless an Electronics faculty document is added first.
+
+------------------------------------------------------------
+8. CHECK THE UPDATED COLLECTION
+------------------------------------------------------------
+
+Display all remaining student documents:
+db.students.find()
+
+Display all remaining faculty documents:
+db.faculty.find()
+
+------------------------------------------------------------
+9. UPSERT – UPDATE OR INSERT
+------------------------------------------------------------
+
+db.students.updateOne(
+  { roll_no: 107 },
+  { $set: { year: 3 } },
+  { upsert: true }
+)
+
+Expected:
+If no document with roll_no 107 exists, MongoDB inserts a new document with roll_no 107 and year 3.
+
+------------------------------------------------------------
+10. IMPORTANT MONGODB COMMANDS FOR QUICK REVISION
+------------------------------------------------------------
+
+Select database:
+use ERP
+
+Create collection:
+db.createCollection("students")
+
+Insert one document:
+db.students.insertOne({ name: "Aarav Mehta", roll_no: 101 })
+
+Insert multiple documents:
+db.students.insertMany([{ name: "Aarav Mehta" }, { name: "Isha Kulkarni" }])
+
+Display all documents:
+db.students.find()
+
+Find documents using a condition:
+db.students.find({ dept: "Computer Engineering" })
+
+Find one document:
+db.students.findOne({ roll_no: 102 })
+
+Update one document:
+db.students.updateOne(
+  { roll_no: 101 },
+  { $set: { year: 3 } }
+)
+
+Update multiple documents:
+db.students.updateMany(
+  { dept: "Computer Engineering" },
+  { $set: { dept: "CSE" } }
+)
+
+Increment a numeric field:
+db.students.updateMany(
+  { year: 2 },
+  { $inc: { year: 1 } }
+)
+
+Replace a document:
+db.students.replaceOne(
+  { roll_no: 103 },
+  { name: "Rohan Shah", roll_no: 103 }
+)
+
+Delete one document:
+db.students.deleteOne({ roll_no: 104 })
+
+Delete multiple documents:
+db.students.deleteMany({ dept: "Electronics" })
+
+Sort ascending:
+db.students.find().sort({ roll_no: 1 })
+
+Sort descending:
+db.students.find().sort({ roll_no: -1 })
+
+Limit number of results:
+db.students.find().limit(3)
+
+Display selected fields only:
+db.students.find({}, { name: 1, dept: 1, _id: 0 })
+
+Count documents:
+db.students.countDocuments()

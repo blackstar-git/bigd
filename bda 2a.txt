@@ -1,0 +1,28 @@
+Expt 2
+Commands:
+mysql -u root -pcloudera
+mysql> show databases;
+mysql> create database student_db;
+mysql> use retail_db; or any other database name
+mysql> CREATE TABLE students (
+    id INT,
+    name VARCHAR(50),
+    age INT,
+    marks INT
+);
+mysql> INSERT INTO students VALUES
+(1, 'Amit', 20, 85),
+(2, 'Rahul', 21, 90),
+(3, 'Neha', 20, 95);
+mysql> show tables;
+[cloudera@quickstart ~]$ sqoop list-databases --connect jdbc:mysql://quickstart:3306/ --password cloudera --username root;
+[cloudera@quickstart ~]$ sqoop list-tables --connect jdbc:mysql://quickstart:3306/retail_db --password cloudera --username root;
+[cloudera@quickstart ~]$ sqoop import --connect jdbc:mysql://quickstart:3306/retail_db --password cloudera --username root –table departments;
+hadoop fs -ls
+hadoop fs -ls departments
+hadoop fs -cat /user/cloudera/departments/part*
+[cloudera@quickstart ~]$ sqoop import --connect jdbc:mysql://quickstart:3306/retail_db --password cloudera --username root –table departments  –target-dir /user/coudera/department1;
+[cloudera@quickstart ~]$ sqoop import --connect jdbc:mysql://quickstart:3306/retail_db --password cloudera --username root –table departments --where "department id>4" --target-dir /user/cloudera/department2;
+[cloudera@quickstart ~]$ sqoop export --connect jdbc:mysql://quickstart:3306/retail_db --password cloudera --username root –table dept –export-dir /user/cloudera/department2;	
+mysql> select * from dept;
+mysql> exit;

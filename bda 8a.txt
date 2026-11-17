@@ -1,0 +1,159 @@
+Expt 8
+R Community Detection
+
+nodes <- LETTERS[1:12]
+
+edges <- matrix(c(
+  # Group 1 (A-E)
+  1,2,  1,3,  2,3,  2,4,  3,4,  4,5,  3,5,
+  # Group 2 (F-I)
+  6,7,  6,8,  7,8,  7,9,  8,9,
+  # Group 3 (J-L)
+  10,11, 10,12, 11,12
+), ncol = 2, byrow = TRUE)
+
+n <- length(nodes)
+adj <- matrix(0, n, n)
+
+for (i in 1:nrow(edges)) {
+  a <- edges[i, 1]
+  b <- edges[i, 2]
+  adj[a, b] <- 1
+  adj[b, a] <- 1
+}
+
+cat("SOCIAL NETWORK ANALYSIS\n")
+cat("Number of Nodes:", n, "\n")
+cat("Number of Edges:", nrow(edges), "\n\n")
+cat("Connections:\n")
+
+for (i in 1:n) {
+  connected <- which(adj[i, ] == 1)
+  cat(nodes[i], ":", paste(nodes[connected], collapse = ", "), "\n")
+}
+
+degree <- rowSums(adj)
+cat("\nDegree Centrality:\n")
+for (i in 1:n) {
+  cat(nodes[i], ":", degree[i], "\n")
+}
+
+# ---- Community detection (BFS / connected components) ----
+visited <- rep(FALSE, n)
+community <- rep(0, n)
+community_id <- 0
+
+for (i in 1:n) {
+  if (!visited[i]) {
+    community_id <- community_id + 1
+    queue <- c(i)
+    visited[i] <- TRUE
+    while (length(queue) > 0) {
+      current <- queue[1]
+      queue <- queue[-1]
+      community[current] <- community_id
+      neighbours <- which(adj[current, ] == 1)
+      for (j in neighbours) {
+        if (!visited[j]) {
+          visited[j] <- TRUE
+          queue <- c(queue, j)
+        }
+      }
+    }
+  }
+}
+
+cat("\nDetected Communities:\n")
+for (i in 1:community_id) {
+  members <- nodes[community == i]
+  cat("Community", i, ":", paste(members, collapse = ", "), "\n")
+}
+
+cat("\nCommunity Membership:\n")
+for (i in 1:n) {
+  cat(nodes[i], "-> Community", community[i], "\n")
+}
+
+# ---- Visualization (base R, no packages needed) ----
+palette_cols <- c("#E41A1C", "#377EB8", "#4DAF4A", "#984EA3", "#FF7F00")
+cols <- palette_cols[(community - 1) %% length(palette_cols) + 1]
+
+# Layout: place each community around its own center
+coords <- matrix(0, n, 2)
+centers <- cbind(5 * cos(2 * pi * (0:(community_id - 1)) / community_id),
+                 5 * sin(2 * pi * (0:(community_id - 1)) / community_id))
+
+for (c in 1:community_id) {
+  idx <- which(community == c)
+  ang <- pi / 2 + 2 * pi * (seq_along(idx) - 1) / length(idx)
+  coords[idx, 1] <- centers[c, 1] + 1.5 * cos(ang)
+  coords[idx, 2] <- centers[c, 2] + 1.5 * sin(ang)
+}
+
+plot(NA, xlim = c(-9, 9), ylim = c(-9, 9), asp = 1,
+     axes = FALSE, xlab = "", ylab = "",
+     main = "Social Network with Detected Communities")
+
+# Shaded halo behind each community
+symbols(centers[, 1], centers[, 2], circles = rep(2.5, community_id),
+        inches = FALSE, add = TRUE, fg = NA,
+        bg = adjustcolor(palette_cols[1:community_id], alpha.f = 0.15))
+
+# Edges
+segments(coords[edges[, 1], 1], coords[edges[, 1], 2],
+         coords[edges[, 2], 1], coords[edges[, 2], 2],
+         col = "grey50", lwd = 2)
+
+# Nodes (size scaled by degree) and labels
+points(coords, pch = 21, bg = cols, col = "black", cex = 2.5 + degree * 0.6)
+text(coords, labels = nodes, col = "white", font = 2)
+
+legend("bottomright", legend = paste("Community", 1:community_id),
+       pt.bg = palette_cols[1:community_id], pch = 21, pt.cex = 2, bty = "n")
+
+# ---- ALTERNATE Social Network Visualization ----
+cols <- rainbow(community_id)[community]
+coords <- matrix(0, n, 2)
+
+centers <- cbind(
+  5 * cos(2*pi*(0:(community_id-1))/community_id),
+  5 * sin(2*pi*(0:(community_id-1))/community_id)
+)
+
+for (c in 1:community_id) {
+  idx <- which(community == c)
+  ang <- seq(0, 2*pi, length.out=length(idx)+1)[-1]
+
+  coords[idx,1] <- centers[c,1] + 1.5*cos(ang)
+  coords[idx,2] <- centers[c,2] + 1.5*sin(ang)
+}
+
+# Create plot
+plot(NA,
+     xlim=c(-8,8), ylim=c(-8,8),
+     main="Social Network Analysis",
+     xlab="", ylab="",
+     axes=FALSE, asp=1)
+
+# Draw connections
+segments(
+  coords[edges[,1],1], coords[edges[,1],2],
+  coords[edges[,2],1], coords[edges[,2],2],
+  col="grey", lwd=2
+)
+
+# Draw nodes
+points(coords,
+       pch=21,
+       bg=cols,
+       cex=2.5 + degree*0.5)
+
+# Add node labels
+text(coords, labels=nodes, col="white", font=2)
+
+# Add legend
+legend("bottomright",
+       legend=paste("Community",1:community_id),
+       col=rainbow(community_id),
+       pch=19,
+       bty="n")

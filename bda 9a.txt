@@ -1,0 +1,82 @@
+Expt 9
+R Data visualization 
+# ===== Experiment: Creating and analysing data visualizations in R =====
+# 1. Create a hard-coded data frame
+sales <- data.frame(
+  Category = rep(c("Electronics", "Clothing", "Grocery"), each = 4),
+  Quarter  = rep(c("Q1", "Q2", "Q3", "Q4"), times = 3),
+  Units    = c(120, 135, 150, 180, 400, 470, 350, 640, 1500, 1550, 1600, 1700),
+  Revenue  = c(240, 270, 300, 380, 80, 95, 70, 130, 190, 198, 205, 220),
+  Cost     = c(180, 200, 225, 270, 56, 66, 52, 90, 130, 133, 138, 146)
+)
+print(sales)
+str(sales)
+
+# 2. Data manipulation: derive new columns
+sales$Profit <- sales$Revenue - sales$Cost
+sales$Margin <- round(sales$Profit / sales$Revenue * 100, 1)
+print(sales)
+summary(sales$Profit)
+
+# Top 5 most profitable rows
+top5 <- sales[order(-sales$Profit), ][1:5, ]
+print(top5)
+
+# Filter: rows with a profit margin above 30 %
+high_margin <- subset(sales, Margin > 30)
+print(high_margin)
+
+# Group-wise aggregation
+category_summary <- aggregate(cbind(Units, Revenue, Cost, Profit) ~ Category,
+                              data = sales, FUN = sum)
+print(category_summary)
+tapply(sales$Margin, sales$Category, mean)
+
+# 3. Visualization
+cat_cols <- c(Clothing = "#E41A1C", Electronics = "#377EB8", Grocery = "#4DAF4A")
+
+# Plot 1: bar chart of total revenue
+bp <- barplot(category_summary$Revenue,
+              names.arg = category_summary$Category,
+              col = cat_cols, ylim = c(0, 1400),
+              main = "Total Revenue by Category",
+              xlab = "Category", ylab = "Revenue ('000)")
+text(bp, category_summary$Revenue,
+     labels = category_summary$Revenue, pos = 3)
+
+# Plot 2: line chart of quarterly revenue
+rev_matrix <- tapply(sales$Revenue,
+                     list(sales$Category, sales$Quarter), sum)
+print(rev_matrix)
+matplot(t(rev_matrix), type = "o", pch = 19, lty = 1, lwd = 2,
+        col = cat_cols, xaxt = "n", xlab = "Quarter",
+        ylab = "Revenue ('000)", main = "Quarterly Revenue Trend")
+axis(1, at = 1:4, labels = colnames(rev_matrix))
+legend("topleft", legend = rownames(rev_matrix), col = cat_cols,
+       lty = 1, pch = 19, lwd = 2)
+
+# Plot 3: box plot of profit margin
+boxplot(Margin ~ Category, data = sales, col = cat_cols,
+        main = "Profit Margin by Category",
+        xlab = "Category", ylab = "Profit Margin (%)")
+
+# Plot 4: scatter plot with regression line
+plot(sales$Cost, sales$Revenue, pch = 19, cex = 1.6,
+     col = cat_cols[sales$Category],
+     xlab = "Cost ('000)", ylab = "Revenue ('000)",
+     main = "Revenue vs Cost")
+model <- lm(Revenue ~ Cost, data = sales)
+abline(model, lty = 2, lwd = 2)
+legend("topleft", legend = names(cat_cols), col = cat_cols,
+       pch = 19, pt.cex = 1.4)
+cor(sales$Cost, sales$Revenue)
+round(coef(model), 3)
+round(summary(model)$r.squared, 4)
+
+# Plot 5: pie chart of profit share
+profit_share <- round(category_summary$Profit /
+                        sum(category_summary$Profit) * 100, 1)
+profit_share
+pie(category_summary$Profit,
+    labels = paste0(category_summary$Category, " (", profit_share, "%)"),
+    col = cat_cols, main = "Share of Total Profit")

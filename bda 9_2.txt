@@ -1,0 +1,68 @@
+# Experiment 9: Create and Analyze Data Visualizations Using R
+
+# Create the dataset
+data <- data.frame(
+  Student = c("A", "B", "C", "D", "E"),
+  Marks = c(78, 85, 67, 92, 74),
+  Attendance = c(85, 90, 75, 95, 80)
+)
+
+# Display the dataset
+print(data)
+
+# Bar chart: Student marks
+barplot(
+  data$Marks,
+  names.arg = data$Student,
+  col = "skyblue",
+  main = "Student Marks",
+  xlab = "Student",
+  ylab = "Marks"
+)
+
+# Histogram: Distribution of marks
+hist(
+  data$Marks,
+  col = "lightgreen",
+  main = "Distribution of Student Marks",
+  xlab = "Marks",
+  ylab = "Frequency"
+)
+
+# Scatter plot: Attendance versus marks
+plot(
+  data$Attendance,
+  data$Marks,
+  pch = 19,
+  col = "blue",
+  main = "Marks vs Attendance",
+  xlab = "Attendance (%)",
+  ylab = "Marks"
+)
+
+# Box plot: Distribution of marks
+boxplot(
+  data$Marks,
+  col = "orange",
+  main = "Box Plot of Student Marks",
+  ylab = "Marks"
+)
+
+# Line graph: Student marks trend
+plot(
+  data$Marks,
+  type = "o",
+  pch = 16,
+  col = "purple",
+  xaxt = "n",
+  main = "Student Marks Trend",
+  xlab = "Student",
+  ylab = "Marks"
+)
+
+# Display student names on the x-axis
+axis(
+  1,
+  at = 1:5,
+  labels = data$Student
+)

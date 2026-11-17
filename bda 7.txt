@@ -1,0 +1,54 @@
+exp 7 bloom filter
+Steps:
+
+Create an empty list arr to record inserted items, and a bit array bits of 10 zeros.
+Define the insert function hash(num). It computes two positions, n1 = num % 10 and n2 = (num*3) % 10, sets those bits to 1, and appends the number to arr.
+Define the lookup function check(num). It computes the same two positions. If both bits are 1 it prints “Maybe Exists”, otherwise “Def doesnt exist”.
+Insert 25 and 42.
+Check 25, 42 and 17, then print arr and bits.
+
+
+arr = []
+bits = [0,0,0,0,0,0,0,0,0,0]
+
+def hash(num):
+    n1 = num % 10
+    n2 = (num*3) % 10
+    for i in range(len(bits)):
+        if i == n1 or i == n2:
+            bits[i] = 1
+    arr.append(num)
+
+def check(num):
+    n1 = num % 10
+    n2 = (num*3) % 10
+    if bits[n1] == 1 and bits[n2] == 1:
+        print(num, "Maybe Exists")
+    else:
+        print(num, "Def doesnt exist")
+
+hash(25)
+hash(42)
+check(25)
+check(42)
+check(17)
+print("Current Stack:", arr)
+print("Bloom filter array:", bits)
+
+
+
+What happens:
+
+25 sets positions 5 and 5 (75 % 10 = 5).
+42 sets positions 2 and 6 (126 % 10 = 6).
+Check 25 finds bits 5 and 5 set, so “Maybe Exists”.
+Check 42 finds bits 2 and 6 set, so “Maybe Exists”.
+Check 17 looks at positions 7 and 1 (51 % 10 = 1). Bit 7 is 0, so “Def doesnt exist”.
+
+Output:
+
+25 Maybe Exists
+42 Maybe Exists
+17 Def doesnt exist
+Current Stack: [25, 42]
+Bloom filter array: [0, 0, 1, 0, 0, 1, 1, 0, 0, 0]

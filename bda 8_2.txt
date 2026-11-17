@@ -1,0 +1,62 @@
+# Experiment 8: Social Network Analysis using R
+# Louvain Community Detection Algorithm
+
+# Install the package once if it is not already installed:
+# install.packages("igraph")
+
+library(igraph)
+
+# Define the network edges
+edges <- c(
+  "A", "B",
+  "A", "C",
+  "B", "C",
+  "B", "D",
+  "C", "D",
+  "E", "F",
+  "E", "G",
+  "F", "G",
+  "F", "H",
+  "G", "H",
+  "D", "E"
+)
+
+# Create an undirected graph
+g <- graph_from_edgelist(
+  matrix(edges, ncol = 2, byrow = TRUE),
+  directed = FALSE
+)
+
+# Display the graph
+print(g)
+
+# Plot the social network
+plot(
+  g,
+  vertex.color = "lightblue",
+  vertex.size = 30,
+  vertex.label.color = "black",
+  edge.color = "gray",
+  main = "Social Network"
+)
+
+# Detect communities using the Louvain algorithm
+communities <- cluster_louvain(g)
+
+# Display community membership
+print(membership(communities))
+
+# Display number of communities
+print(length(communities))
+
+# Display modularity
+print(modularity(communities))
+
+# Plot the detected communities
+plot(
+  communities,
+  g,
+  vertex.size = 30,
+  vertex.label.color = "black",
+  main = "Community Detection using Louvain Algorithm"
+)
